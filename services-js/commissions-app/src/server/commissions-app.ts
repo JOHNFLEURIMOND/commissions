@@ -33,6 +33,7 @@ export async function makeServer(port) {
   let makeCommissionsDao: () => CommissionsDao;
 
   if (
+    process.env.ALLOW_FAKES ||
     process.env.NODE_ENV === 'test' ||
     (process.env.NODE_ENV !== 'production' &&
       !process.env.COMMISSIONS_DB_SERVER)
@@ -119,6 +120,12 @@ export async function makeServer(port) {
   if (process.env.NODE_ENV !== 'test') {
     await server.register(loggingPlugin);
   }
+
+  server.route({
+    method: 'GET',
+    path: '/commissions',
+    handler: (_, h) => h.redirect('/commissions/apply'),
+  });
 
   server.route(adminOkRoute);
 

@@ -10,9 +10,29 @@ $ yarn install
 
 ## Development
 
+### Compliation / Transpilation
+
+#### Modules
+
+This uses “watch” features to rebuild all of our modules as their source
+changes.
+
+```
+$ yarn watch
+```
+
+_Note:_ This may not necessarily capture recompiling depending modules when
+their dependencies rebuild.
+
+_Note:_ You may need to make heavy use of restarting any TypeScript server in
+your editor if types in these modules change.
+
+
+#### Services
+
 ```
 $ cd services-js/commissions-app
-$ npm run dev
+$ yarn dev
 ```
 
 ### Making a new package

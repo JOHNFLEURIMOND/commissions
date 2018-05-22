@@ -10,6 +10,7 @@
     "build:server": "tsc",
     "build:next": "next build src",
     "dev": "npm run prebuild && tsc-watch --onSuccess \"npm run start\"",
+    "watch-dependencies": "lerna run --parallel --scope commissions-app --include-filtered-dependencies watch",
     "prepare": "npm run build",
     "start": "node build/server/start",
     "pretest": "tsc --noEmit -p tsconfig.check.json",
@@ -21,7 +22,7 @@
     "preset": "@cityofboston/config-jest-babel"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta",
+    "@babel/runtime": "7.0.0-beta.42",
     "@cityofboston/hapi-common": "^0.0.0",
     "@cityofboston/hapi-next": "^0.0.0",
     "@cityofboston/mssql-common": "^0.0.0",
@@ -41,8 +42,8 @@
     "react-dom": "^16.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta",
-    "@babel/core": "^7.0.0-beta",
+    "@babel/cli": "7.0.0-beta.42",
+    "@babel/core": "7.0.0-beta.42",
     "@cityofboston/config-babel": "^0.0.0",
     "@cityofboston/config-jest-babel": "^0.0.0",
     "@cityofboston/config-typescript": "^0.0.0",
@@ -57,7 +58,7 @@
     "babel-core": "^7.0.0-0",
     "concurrently": "^3.5.1",
     "faker": "^4.1.0",
-    "jest": "^22.0.0",
+    "jest": "^22.4.0",
     "react-test-renderer": "^16.3.0",
     "rimraf": "^2.6.2",
     "ts2gql": "CityOfBoston/ts2gql#dist",
