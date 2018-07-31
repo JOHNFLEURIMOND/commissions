@@ -1964,6 +1964,13 @@
     "@types/events" "*"
     "@types/node" "*"
 
+"@types/mssql@^4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@types/mssql/-/mssql-4.0.8.tgz#b808d4d3c21bf6305f837a98584a3c0599011011"
+  dependencies:
+    "@types/events" "*"
+    "@types/node" "*"
+
 "@types/node-fetch@^1.6.9":
   version "1.6.9"
   resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-1.6.9.tgz#a750fb0f4cf2960bf72b462e4c86908022dd69c5"
