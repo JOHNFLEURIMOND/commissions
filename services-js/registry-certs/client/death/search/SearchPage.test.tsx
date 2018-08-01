@@ -4,10 +4,7 @@ import { shallow } from 'enzyme';
 
 import Router from 'next/router';
 
-import type {
-  DeathCertificate,
-  DeathCertificateSearchResults,
-} from '../../types';
+import { DeathCertificate, DeathCertificateSearchResults } from '../../types';
 import DeathCertificatesDao from '../../dao/DeathCertificatesDao';
 import SiteAnalytics from '../../lib/SiteAnalytics';
 
@@ -42,14 +39,14 @@ describe('getInitialProps', () => {
   let siteAnalytics;
 
   beforeEach(() => {
-    deathCertificatesDao = new DeathCertificatesDao((null: any));
+    deathCertificatesDao = new DeathCertificatesDao(null as any);
     siteAnalytics = new SiteAnalytics();
   });
 
   it('works with no query', async () => {
     const initialProps = await SearchPage.getInitialProps(
-      ({ query: {} }: any),
-      ({ deathCertificatesDao, siteAnalytics }: any)
+      { query: {} } as any,
+      { deathCertificatesDao, siteAnalytics } as any
     );
 
     expect(initialProps).toMatchSnapshot();
@@ -59,8 +56,8 @@ describe('getInitialProps', () => {
     deathCertificatesDao.search.mockReturnValue(TEST_SEARCH_RESULTS);
 
     const initialProps = await SearchPage.getInitialProps(
-      ({ query: { q: 'Monkey Joe' } }: any),
-      ({ deathCertificatesDao, siteAnalytics }: any)
+      { query: { q: 'Monkey Joe' } } as any,
+      { deathCertificatesDao, siteAnalytics } as any
     );
 
     expect(initialProps).toMatchSnapshot();
@@ -72,7 +69,7 @@ describe('operations', () => {
   let component;
 
   beforeEach(() => {
-    component = new SearchPage(({}: any));
+    component = new SearchPage({} as any);
   });
 
   describe('submitSearch', () => {

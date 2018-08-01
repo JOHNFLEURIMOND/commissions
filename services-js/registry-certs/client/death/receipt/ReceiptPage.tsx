@@ -1,28 +1,25 @@
-// @flow
-
 import React from 'react';
 import Head from 'next/head';
 
-import type { DeathCertificateOrder } from '../../types';
+import { DeathCertificateOrder } from '../../types';
 
-import {
-  getDependencies,
-  type ClientContext,
-  type ClientDependencies,
-} from '../../app';
+import { getDependencies, ClientContext, ClientDependencies } from '../../app';
 
 import { GRAY_200 } from '../../common/style-constants';
 
-type Props = {|
-  order: ?DeathCertificateOrder,
-|};
+interface Props {
+  order: DeathCertificateOrder | null;
+}
 
 export default class ReceiptPage extends React.Component<Props> {
   static async getInitialProps(
     ctx: ClientContext,
     dependenciesForTest?: ClientDependencies
   ): Promise<Props> {
-    const { query: { id, contactEmail }, res } = ctx;
+    const {
+      query: { id, contactEmail },
+      res,
+    } = ctx;
     const { deathCertificatesDao } =
       dependenciesForTest || getDependencies(ctx);
 

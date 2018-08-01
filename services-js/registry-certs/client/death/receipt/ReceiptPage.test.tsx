@@ -1,4 +1,3 @@
-// @flow
 import DeathCertificatesDao from '../../dao/DeathCertificatesDao';
 
 import ReceiptPage from './ReceiptPage';
@@ -11,17 +10,17 @@ describe('getInitialProps', () => {
   let deathCertificatesDao;
 
   beforeEach(() => {
-    deathCertificatesDao = new DeathCertificatesDao((null: any));
+    deathCertificatesDao = new DeathCertificatesDao(null as any);
   });
 
   it('loads the order passed in query', async () => {
     deathCertificatesDao.lookupOrder.mockReturnValue(TYPICAL_ORDER);
 
     const initialProps = await ReceiptPage.getInitialProps(
-      ({
+      {
         query: { id: 'RG-DC201801-360926', contactEmail: 'nancy@mew.org' },
-      }: any),
-      ({ deathCertificatesDao }: any)
+      } as any,
+      { deathCertificatesDao } as any
     );
 
     expect(deathCertificatesDao.lookupOrder).toHaveBeenCalledWith(
@@ -35,10 +34,10 @@ describe('getInitialProps', () => {
     deathCertificatesDao.get.mockReturnValue(null);
 
     const initialProps = await ReceiptPage.getInitialProps(
-      ({
+      {
         query: { id: 'RG-DC201801-360926', contactEmail: 'nancy@mew.org' },
-      }: any),
-      ({ deathCertificatesDao }: any)
+      } as any,
+      { deathCertificatesDao } as any
     );
 
     expect(deathCertificatesDao.lookupOrder).toHaveBeenCalledWith(

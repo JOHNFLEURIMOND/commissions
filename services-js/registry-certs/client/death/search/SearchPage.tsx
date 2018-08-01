@@ -1,17 +1,11 @@
-// @flow
-
 import React from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
 
-import {
-  getDependencies,
-  type ClientContext,
-  type ClientDependencies,
-} from '../../app';
-import type { DeathCertificateSearchResults } from '../../types';
+import { getDependencies, ClientContext, ClientDependencies } from '../../app';
+import { DeathCertificateSearchResults } from '../../types';
 
-import type SiteAnalytics from '../../lib/SiteAnalytics';
+import SiteAnalytics from '../../lib/SiteAnalytics';
 
 import AppLayout from '../../AppLayout';
 
@@ -19,32 +13,29 @@ import Pagination from '../../common/Pagination';
 
 import SearchResult from './SearchResult';
 
-type DefaultProps = {|
-  siteAnalytics: SiteAnalytics,
-|};
+interface DefaultProps {
+  siteAnalytics: SiteAnalytics;
+}
 
-type InitialProps = {|
-  query: string,
-  page: number,
-  results: ?DeathCertificateSearchResults,
-|};
+interface InitialProps {
+  query: string;
+  page: number;
+  results: DeathCertificateSearchResults | null;
+}
 
-type Props = {|
-  ...DefaultProps,
-  ...InitialProps,
-|};
+interface Props extends InitialProps, Partial<DefaultProps> {}
 
-type State = {
-  query: string,
-};
+interface State {
+  query: string;
+}
 
-export default class SearchPage extends React.Component<Props, State> {
+class SearchPage extends React.Component<Props & DefaultProps, State> {
   static get defaultProps(): DefaultProps {
     const { siteAnalytics } = getDependencies();
     return { siteAnalytics };
   }
 
-  queryField: ?HTMLInputElement;
+  queryField: HTMLInputElement | null = null;
 
   static async getInitialProps(
     ctx: ClientContext,
@@ -57,7 +48,7 @@ export default class SearchPage extends React.Component<Props, State> {
     let q = query.q || '';
     let page = 1;
 
-    let results = null;
+    let results: DeathCertificateSearchResults | null = null;
 
     if (q) {
       page = parseInt(query.page, 10) || 1;
@@ -72,7 +63,7 @@ export default class SearchPage extends React.Component<Props, State> {
     };
   }
 
-  constructor(props: Props) {
+  constructor(props: Props & DefaultProps) {
     super(props);
 
     const { query } = props;
@@ -101,16 +92,16 @@ export default class SearchPage extends React.Component<Props, State> {
     Router.push(`/death?q=${encodeURIComponent(query.trim())}`);
   };
 
-  setQueryField = (queryField: ?HTMLInputElement) => {
+  setQueryField = (queryField: HTMLInputElement | null) => {
     this.queryField = queryField;
   };
 
-  handleQueryChange = (ev: SyntheticInputEvent<*>) => {
+  handleQueryChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const query: string = ev.target.value;
     this.setState({ query });
   };
 
-  handleSubmit = (ev: SyntheticInputEvent<*>) => {
+  handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
 
     if (this.queryField) {
@@ -331,3 +322,7 @@ export default class SearchPage extends React.Component<Props, State> {
     );
   }
 }
+
+export default (SearchPage as any) as React.ComponentClass<Props> & {
+  getInitialProps: (typeof SearchPage)['getInitialProps'];
+};

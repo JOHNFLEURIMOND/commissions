@@ -4,10 +4,17 @@ import {
   LookupDeathCertificateOrderQuery,
 } from './queries/graphql-types';
 
-export type DeathCertificate = NonNullable<
-  FetchDeathCertificatesQuery['deathCertificates']['certificates'][0]
->;
+export interface DeathCertificate
+  extends NonNullable<
+      FetchDeathCertificatesQuery['deathCertificates']['certificates'][0]
+    > {}
 
-export type DeathCertificateSearchResults = SearchDeathCertificatesQuery['deathCertificates']['search'];
+export interface DeathCertificateSearchResults
+  extends NonNullable<
+      SearchDeathCertificatesQuery['deathCertificates']['search']
+    > {}
 
-export type DeathCertificateOrder = LookupDeathCertificateOrderQuery['deathCertificates']['order'];
+export interface DeathCertificateOrder
+  extends NonNullable<
+      LookupDeathCertificateOrderQuery['deathCertificates']['order']
+    > {}

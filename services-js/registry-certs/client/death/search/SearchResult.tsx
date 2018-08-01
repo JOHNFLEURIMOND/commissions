@@ -1,16 +1,14 @@
-// @flow
-
 import React from 'react';
 import Link from 'next/link';
 
-import type { DeathCertificate } from '../../types';
+import { DeathCertificate } from '../../types';
 
 import CertificateRow from '../../common/CertificateRow';
 
-export type Props = {|
-  certificate: DeathCertificate,
-  backUrl: string,
-|};
+export interface Props {
+  certificate: DeathCertificate;
+  backUrl: string;
+}
 
 export default function SearchResult({ backUrl, certificate }: Props) {
   const { id } = certificate;
