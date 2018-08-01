@@ -1,4 +1,3 @@
-
 // Wrapper controller for the separate pages along the checkout flow
 
 import React from 'react';
@@ -6,13 +5,13 @@ import { reaction, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import Router from 'next/router';
 
-import { getDependencies,  ClientContext } from '../../app';
+import { getDependencies, ClientContext } from '../../app';
 
-import  CheckoutDao from '../../dao/CheckoutDao';
-import  Accessibility from '../../store/Accessibility';
-import  Cart from '../../store/Cart';
-import  OrderProvider from '../../store/OrderProvider';
-import  SiteAnalytics from '../../lib/SiteAnalytics';
+import CheckoutDao from '../../dao/CheckoutDao';
+import Accessibility from '../../store/Accessibility';
+import Cart from '../../store/Cart';
+import OrderProvider from '../../store/OrderProvider';
+import SiteAnalytics from '../../lib/SiteAnalytics';
 
 import Order from '../../models/Order';
 
@@ -24,37 +23,37 @@ import { CERTIFICATE_COST } from '../../../lib/costs';
 
 type PageInfo =
   | {
-      page: 'shipping',
+      page: 'shipping';
     }
   | {
-      page: 'payment',
+      page: 'payment';
     }
   | {
-      page: 'review',
+      page: 'review';
     }
   | {
-      page: 'confirmation',
-      orderId: string,
-      contactEmail: string,
+      page: 'confirmation';
+      orderId: string;
+      contactEmail: string;
     };
 
-interface DefaultProps  {
-  accessibility: Accessibility,
-  cart: Cart,
-  siteAnalytics: SiteAnalytics,
-  orderProvider: OrderProvider,
-  checkoutDao: CheckoutDao,
-  stripe: stripe.Stripe | null,
-};
+interface DefaultProps {
+  accessibility: Accessibility;
+  cart: Cart;
+  siteAnalytics: SiteAnalytics;
+  orderProvider: OrderProvider;
+  checkoutDao: CheckoutDao;
+  stripe: stripe.Stripe | null;
+}
 
 interface InitialProps {
-  info: PageInfo,
-};
+  info: PageInfo;
+}
 
-interface Props extends InitialProps & Partial<DefaultProps> {}
+interface Props extends InitialProps, Partial<DefaultProps> {}
 
 @observer
- class CheckoutPageController extends React.Component<Props & DefaultProps> {
+class CheckoutPageController extends React.Component<Props & DefaultProps> {
   static get defaultProps(): DefaultProps {
     const {
       accessibility,
@@ -130,9 +129,11 @@ interface Props extends InitialProps & Partial<DefaultProps> {}
   // goes forward and back in the interface, and it will get automatically
   // disposed of if the user leaves the flow, which is the behavior that we
   // want.
-  order: Order;
+  //
+  // Set in componentWillMount, so it always is non-null;
+  order: Order = null as any;
 
-  errorAccessibilityDisposer: Function;
+  errorAccessibilityDisposer: Function | null = null;
 
   componentWillMount() {
     const { orderProvider, accessibility } = this.props;
@@ -160,10 +161,12 @@ interface Props extends InitialProps & Partial<DefaultProps> {}
   }
 
   componentWillUnmount() {
-    this.errorAccessibilityDisposer();
+    if (this.errorAccessibilityDisposer) {
+      this.errorAccessibilityDisposer();
+    }
   }
 
-  componentWillReceiveProps(newProps: Props) {
+  componentWillReceiveProps(newProps: Props & DefaultProps) {
     this.redirectIfMissingOrderInfo(newProps);
 
     if (newProps.info.page !== this.props.info.page) {
@@ -171,8 +174,8 @@ interface Props extends InitialProps & Partial<DefaultProps> {}
     }
   }
 
-  reportCheckoutStep({ info, cart, siteAnalytics }: Props) {
-    let checkoutStep = null;
+  reportCheckoutStep({ info, cart, siteAnalytics }: Props & DefaultProps) {
+    let checkoutStep: number | null = null;
     switch (info.page) {
       case 'shipping':
         checkoutStep = 1;
@@ -291,9 +294,12 @@ interface Props extends InitialProps & Partial<DefaultProps> {}
             contactEmail={info.contactEmail}
           />
         );
-
-      default:
-        throw new Error(`Unknown page: ${(info.page as any)}`);
     }
   }
 }
+
+export default (CheckoutPageController as any) as React.ComponentClass<
+  Props
+> & {
+  getInitialProps: (typeof CheckoutPageController)['getInitialProps'];
+};

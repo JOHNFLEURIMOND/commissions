@@ -1,10 +1,8 @@
-// @flow
-
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
-import type { DeathCertificate } from '../../types.js';
+import { DeathCertificate } from '../../types.js';
 import Cart from '../../store/Cart';
 import Order from '../../models/Order';
 

@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { runInAction } from 'mobx';
@@ -20,7 +18,7 @@ function makeCart(loading: boolean) {
   if (loading) {
     runInAction(() => {
       cart.pendingFetches = 2;
-      cart.entries = ([
+      cart.entries = [
         {
           id: TYPICAL_CERTIFICATE.id,
           cert: null,
@@ -31,7 +29,7 @@ function makeCart(loading: boolean) {
           cert: null,
           quantity: 3,
         },
-      ]: any);
+      ] as any;
     });
   } else {
     cart.setQuantity(TYPICAL_CERTIFICATE, 1);

@@ -1,4 +1,3 @@
-// @flow
 /* global Stripe */
 
 import React from 'react';

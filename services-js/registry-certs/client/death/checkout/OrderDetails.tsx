@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import Link from 'next/link';
 import VelocityTransitionGroup from 'velocity-react/velocity-transition-group';
@@ -11,19 +9,19 @@ import {
   SERVICE_FEE_URI,
 } from '../../../lib/costs';
 
-import type Cart from '../../store/Cart';
+import Cart from '../../store/Cart';
 
 import CertificateRow from '../../common/CertificateRow';
 
-type Props = {|
-  cart: Cart,
-  defaultOpen: boolean,
-  fixed: boolean,
-|};
+interface Props {
+  cart: Cart;
+  defaultOpen?: boolean;
+  fixed?: boolean;
+}
 
-type State = {|
-  open: boolean,
-|};
+interface State {
+  open: boolean;
+}
 
 export default class OrderDetails extends React.Component<Props, State> {
   static defaultProps = {
@@ -35,7 +33,7 @@ export default class OrderDetails extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      open: props.defaultOpen || props.fixed,
+      open: props.defaultOpen || !!props.fixed,
     };
   }
 

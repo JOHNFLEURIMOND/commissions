@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -8,8 +6,8 @@ import { observer } from 'mobx-react';
 
 import AppLayout from '../../AppLayout';
 
-import type Cart from '../../store/Cart';
-import type Order, { OrderInfo } from '../../models/Order';
+import Cart from '../../store/Cart';
+import Order, { OrderInfo } from '../../models/Order';
 import { makeStateSelectOptions } from '../../common/form-elements';
 
 import OrderDetails from './OrderDetails';
@@ -20,17 +18,17 @@ import {
   FREEDOM_RED,
 } from '../../common/style-constants';
 
-export type Props = {|
-  submit: (cardElement: ?StripeElement) => mixed,
-  stripe: ?StripeInstance,
-  cart: Cart,
-  order: Order,
-  showErrorsForTest?: boolean,
-|};
+interface Props {
+  submit: (cardElement: stripe.elements.Element | null) => unknown;
+  stripe: stripe.Stripe | null;
+  cart: Cart;
+  order: Order;
+  showErrorsForTest?: boolean;
+}
 
-type State = {
-  touchedFields: { [$Keys<OrderInfo>]: boolean },
-};
+interface State {
+  touchedFields: Partial<{ [key in keyof OrderInfo]: boolean }>;
+}
 
 @observer
 export default class PaymentContent extends React.Component<Props, State> {
@@ -38,7 +36,7 @@ export default class PaymentContent extends React.Component<Props, State> {
     touchedFields: {},
   };
 
-  cardElement: ?StripeElement = null;
+  cardElement: stripe.elements.Element | null = null;
 
   componentWillMount() {
     const { stripe, order, showErrorsForTest } = this.props;
@@ -92,7 +90,7 @@ export default class PaymentContent extends React.Component<Props, State> {
     }
   }
 
-  setCardField = (el: ?HTMLElement) => {
+  setCardField = (el: HTMLElement | null) => {
     if (this.cardElement) {
       if (el) {
         this.cardElement.mount(el);
@@ -102,29 +100,35 @@ export default class PaymentContent extends React.Component<Props, State> {
     }
   };
 
-  handleCardElementChange = action((ev: StripeElementChangeEvent) => {
-    const { order } = this.props;
-    if (ev.error) {
-      order.cardElementError = ev.error.message;
-      order.cardElementComplete = false;
-    } else if (ev.brand === 'amex') {
-      order.cardElementError =
-        'Unfortunately, we do not accept American Express.';
-      order.cardElementComplete = false;
-    } else {
-      order.cardElementError = null;
-      order.cardElementComplete = ev.complete;
-    }
-  });
+  handleCardElementChange = action(
+    (ev?: stripe.elements.ElementChangeResponse) => {
+      if (!ev) {
+        return;
+      }
 
-  handleSubmit = (ev: SyntheticInputEvent<*>) => {
+      const { order } = this.props;
+      if (ev.error) {
+        order.cardElementError = ev.error.message || null;
+        order.cardElementComplete = false;
+      } else if (ev.brand === 'amex') {
+        order.cardElementError =
+          'Unfortunately, we do not accept American Express.';
+        order.cardElementComplete = false;
+      } else {
+        order.cardElementError = null;
+        order.cardElementComplete = ev.complete;
+      }
+    }
+  );
+
+  handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
 
     const { submit } = this.props;
     submit(this.cardElement);
   };
 
-  fieldListeners(fieldName: $Keys<OrderInfo>) {
+  fieldListeners(fieldName: keyof OrderInfo) {
     return {
       onBlur: action(`onBlur ${fieldName}`, () => {
         const { touchedFields } = this.state;
@@ -136,14 +140,14 @@ export default class PaymentContent extends React.Component<Props, State> {
 
       onChange: action(
         `onChange ${fieldName}`,
-        (ev: SyntheticInputEvent<*>) => {
+        (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
           const { order } = this.props;
 
           if (
             fieldName === 'storeContactAndShipping' ||
             fieldName === 'storeBilling'
           ) {
-            order.info[fieldName] = ev.target.checked;
+            order.info[fieldName] = (ev.target as HTMLInputElement).checked;
           } else if (fieldName === 'billingAddressSameAsShippingAddress') {
             order.info[fieldName] = ev.target.value === 'true';
           } else {
@@ -154,7 +158,7 @@ export default class PaymentContent extends React.Component<Props, State> {
     };
   }
 
-  errorForField(fieldName: $Keys<OrderInfo>): ?string {
+  errorForField(fieldName: keyof OrderInfo): string | null {
     const { order, showErrorsForTest } = this.props;
     const { touchedFields } = this.state;
 
@@ -167,7 +171,7 @@ export default class PaymentContent extends React.Component<Props, State> {
       : null;
   }
 
-  errorAttributes(fieldName: $Keys<OrderInfo>) {
+  errorAttributes(fieldName: keyof OrderInfo) {
     if (this.errorForField(fieldName)) {
       return {
         'aria-invalid': true,
@@ -242,9 +246,9 @@ export default class PaymentContent extends React.Component<Props, State> {
                 </div>
               </div>
 
-              <div className="m-b200">{`${shippingAddress1}${shippingAddress2
-                ? `, ${shippingAddress2}`
-                : ''}, ${shippingCity} ${shippingState} ${shippingZip}`}</div>
+              <div className="m-b200">{`${shippingAddress1}${
+                shippingAddress2 ? `, ${shippingAddress2}` : ''
+              }, ${shippingCity} ${shippingState} ${shippingZip}`}</div>
               <div> </div>
             </div>
 
@@ -517,7 +521,7 @@ export default class PaymentContent extends React.Component<Props, State> {
     );
   }
 
-  renderError(fieldName: $Keys<OrderInfo>) {
+  renderError(fieldName: keyof OrderInfo) {
     const error = this.errorForField(fieldName);
     return (
       error && (
@@ -528,7 +532,7 @@ export default class PaymentContent extends React.Component<Props, State> {
     );
   }
 
-  renderErrorClassName(fieldName: $Keys<OrderInfo>) {
+  renderErrorClassName(fieldName: keyof OrderInfo) {
     const error = this.errorForField(fieldName);
     return error ? 'txt-f--err' : '';
   }

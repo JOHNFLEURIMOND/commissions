@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -9,22 +7,22 @@ import InputMask from 'react-input-mask';
 
 import AppLayout from '../../AppLayout';
 
-import type Cart from '../../store/Cart';
-import type Order, { OrderInfo } from '../../models/Order';
+import  Cart from '../../store/Cart';
+import  Order, { OrderInfo } from '../../models/Order';
 import { makeStateSelectOptions } from '../../common/form-elements';
 
 import OrderDetails from './OrderDetails';
 
-export type Props = {|
-  submit: () => mixed,
+export interface Props  {
+  submit: () => unknown,
   cart: Cart,
   order: Order,
   showErrorsForTest?: boolean,
-|};
+};
 
-type State = {|
-  touchedFields: { [$Keys<OrderInfo>]: boolean },
-|};
+interface State  {
+    touchedFields: Partial<{ [key in keyof OrderInfo]: boolean }>,
+};
 
 @observer
 export default class ShippingContent extends React.Component<Props, State> {
@@ -34,14 +32,14 @@ export default class ShippingContent extends React.Component<Props, State> {
     touchedFields: {},
   };
 
-  handleSubmit = (ev: SyntheticInputEvent<*>) => {
+  handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
 
     const { submit } = this.props;
     submit();
   };
 
-  fieldListeners(fieldName: $Keys<OrderInfo>) {
+  fieldListeners(fieldName: keyof OrderInfo) {
     return {
       onBlur: action(`onBlur ${fieldName}`, () => {
         const { touchedFields } = this.state;
@@ -53,14 +51,14 @@ export default class ShippingContent extends React.Component<Props, State> {
 
       onChange: action(
         `onChange ${fieldName}`,
-        (ev: SyntheticInputEvent<*>) => {
+        (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
           const { order } = this.props;
 
           if (
             fieldName === 'storeContactAndShipping' ||
             fieldName === 'storeBilling'
           ) {
-            order.info[fieldName] = ev.target.checked;
+            order.info[fieldName] = (ev.target as HTMLInputElement).checked;
           } else if (fieldName === 'billingAddressSameAsShippingAddress') {
             // not actually on this page, but we have it so that the Flow types work.
             order.info[fieldName] = ev.target.value === 'true';

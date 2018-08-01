@@ -13,23 +13,23 @@ import {
   SERVICE_FEE_URI,
 } from '../../../lib/costs';
 
-import type Cart from '../../store/Cart';
-import type Order from '../../models/Order';
+import Cart from '../../store/Cart';
+import Order from '../../models/Order';
 
 import CostSummary from '../../common/CostSummary';
 import OrderDetails from './OrderDetails';
 
-export type Props = {|
-  submit: (cardElement: ?StripeElement) => Promise<boolean>,
-  cart: Cart,
-  order: Order,
-  showErrorsForTest?: boolean,
-|};
+export interface Props {
+  submit: (cardElement?: stripe.elements.Element) => unknown;
+  cart: Cart;
+  order: Order;
+  showErrorsForTest?: boolean;
+}
 
-export type State = {|
-  acceptNonRefundable: boolean,
-  acceptPendingCertificates: boolean,
-|};
+export interface State {
+  acceptNonRefundable: boolean;
+  acceptPendingCertificates: boolean;
+}
 
 @observer
 export default class ReviewContent extends React.Component<Props, State> {
@@ -45,15 +45,17 @@ export default class ReviewContent extends React.Component<Props, State> {
     order.regenerateIdempotencyKey();
   }
 
-  handleAcceptNonRefundable = (ev: SyntheticInputEvent<*>) => {
+  handleAcceptNonRefundable = (ev: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ acceptNonRefundable: ev.target.checked });
   };
 
-  handleAcceptPendingCertificates = (ev: SyntheticInputEvent<*>) => {
+  handleAcceptPendingCertificates = (
+    ev: React.ChangeEvent<HTMLInputElement>
+  ) => {
     this.setState({ acceptPendingCertificates: ev.target.checked });
   };
 
-  handleSubmit = async (ev: SyntheticInputEvent<*>) => {
+  handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
 
     const { submit, order } = this.props;
@@ -285,8 +287,7 @@ export default class ReviewContent extends React.Component<Props, State> {
         </div>
 
         <div className="b--g m-t700">
-          <div className="b-c b-c--smv b-c--hsm t--subinfo">
-            <a name="service-fee" />
+          <div id="service-fee" className="b-c b-c--smv b-c--hsm t--subinfo">
             * You are charged an extra service fee of not more than{' '}
             {FIXED_CC_STRING} plus {PERCENTAGE_CC_STRING}. This fee goes
             directly to a third party to pay for the cost of credit card
