@@ -1,6 +1,4 @@
-// @flow
-
-import type { DeathCertificateOrder } from '../../client/types';
+import { DeathCertificateOrder } from '../../client/types';
 
 export const TYPICAL_ORDER: DeathCertificateOrder = {
   id: 'RG-DC201801-360926',

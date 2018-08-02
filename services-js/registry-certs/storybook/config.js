@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+// eslint-disable-next-line no-unused-vars
 import Head from 'next/head';
 import { createRouter } from 'next/router';
 import '@storybook/addon-actions/register';
@@ -21,16 +22,6 @@ const DEFAULT_STYLE = `
 `;
 
 class Wrapper extends React.Component {
-  static propTypes = {
-    headManager: PropTypes.any,
-    children: PropTypes.any,
-  };
-
-  static childContextTypes = {
-    headManager: PropTypes.object,
-    router: PropTypes.object,
-  };
-
   getChildContext() {
     return {
       headManager: this.props.headManager,
@@ -49,6 +40,16 @@ class Wrapper extends React.Component {
   }
 }
 
+Wrapper.propTypes = {
+  headManager: PropTypes.any,
+  children: PropTypes.any,
+};
+
+Wrapper.childContextTypes = {
+  headManager: PropTypes.object,
+  router: PropTypes.object,
+};
+
 // Mock out Jest so we can import tests into storybook for their dummy data
 global.jest = {
   mock: () => {},
@@ -60,8 +61,16 @@ global.beforeEach = () => {};
 global.afterEach = () => {};
 global.describe = () => {};
 
-const clientStoriesContext = require.context('../client', true, /.stories.js$/);
-const serverStoriesContext = require.context('../server', true, /.stories.js$/);
+const clientStoriesContext = require.context(
+  '../client',
+  true,
+  /.stories\.(jsx?|tsx?)$/
+);
+const serverStoriesContext = require.context(
+  '../server',
+  true,
+  /.stories\.(jsx?|tsx?)$/
+);
 
 function loadStories() {
   clientStoriesContext

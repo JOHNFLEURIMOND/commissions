@@ -1,6 +1,4 @@
-// @flow
-
-import type { DeathCertificate } from '../../client/types';
+import { DeathCertificate } from '../../client/types';
 
 export const TYPICAL_CERTIFICATE: DeathCertificate = {
   id: '000002',
