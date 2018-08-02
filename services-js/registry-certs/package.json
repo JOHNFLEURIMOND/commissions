@@ -15,7 +15,7 @@
     "prebuild": "rimraf build && npm run generate-graphql-types",
     "build": "concurrently \"npm run build:server\" \"npm run build:next\"",
     "build:server": "tsc -p tsconfig.server.json",
-    "build:next": "next build src",
+    "build:next": "next build .",
     "prepare": "npm run build",
     "start": "node build/server",
     "storybook": "start-storybook -p 9001 -s static -c storybook",

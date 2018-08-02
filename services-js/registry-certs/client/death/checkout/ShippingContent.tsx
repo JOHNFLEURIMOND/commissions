@@ -7,22 +7,22 @@ import InputMask from 'react-input-mask';
 
 import AppLayout from '../../AppLayout';
 
-import  Cart from '../../store/Cart';
-import  Order, { OrderInfo } from '../../models/Order';
+import Cart from '../../store/Cart';
+import Order, { OrderInfo } from '../../models/Order';
 import { makeStateSelectOptions } from '../../common/form-elements';
 
 import OrderDetails from './OrderDetails';
 
-export interface Props  {
-  submit: () => unknown,
-  cart: Cart,
-  order: Order,
-  showErrorsForTest?: boolean,
-};
+export interface Props {
+  submit: () => unknown;
+  cart: Cart;
+  order: Order;
+  showErrorsForTest?: boolean;
+}
 
-interface State  {
-    touchedFields: Partial<{ [key in keyof OrderInfo]: boolean }>,
-};
+interface State {
+  touchedFields: Partial<{ [key in keyof OrderInfo]: boolean }>;
+}
 
 @observer
 export default class ShippingContent extends React.Component<Props, State> {
@@ -70,7 +70,7 @@ export default class ShippingContent extends React.Component<Props, State> {
     };
   }
 
-  errorForField(fieldName: $Keys<OrderInfo>): ?string {
+  errorForField(fieldName: keyof OrderInfo): string | null {
     const { order, showErrorsForTest } = this.props;
     const { touchedFields } = this.state;
 
@@ -83,7 +83,7 @@ export default class ShippingContent extends React.Component<Props, State> {
       : null;
   }
 
-  errorAttributes(fieldName: $Keys<OrderInfo>) {
+  errorAttributes(fieldName: keyof OrderInfo) {
     if (this.errorForField(fieldName)) {
       return {
         'aria-invalid': true,
@@ -424,7 +424,7 @@ export default class ShippingContent extends React.Component<Props, State> {
     );
   }
 
-  renderError(fieldName: $Keys<OrderInfo>) {
+  renderError(fieldName: keyof OrderInfo) {
     const error = this.errorForField(fieldName);
     return (
       error && (
@@ -435,7 +435,7 @@ export default class ShippingContent extends React.Component<Props, State> {
     );
   }
 
-  renderErrorClassName(fieldName: $Keys<OrderInfo>) {
+  renderErrorClassName(fieldName: keyof OrderInfo) {
     const error = this.errorForField(fieldName);
     return error ? 'txt-f--err' : '';
   }
