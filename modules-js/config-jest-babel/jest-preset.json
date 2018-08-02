@@ -1,6 +1,7 @@
 {
   "transform": {
-    "^.+\\.(j|t)sx?$": "babel-jest"
+    "^.+\\.(j|t)sx?$": "babel-jest",
+    "^.+\\.html?$": "html-loader-jest"
   },
   "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
   "moduleFileExtensions": [
