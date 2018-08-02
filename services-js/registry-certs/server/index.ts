@@ -15,12 +15,17 @@ const rollbar = new Rollbar({
   },
 });
 
-const start = require('./server').default;
+try {
+  const start = require('./server').default;
 
-start({ rollbar }).catch(err => {
-  console.error('Error starting server');
-  console.error(err);
-  rollbar.error(err, () => {
-    process.exit(1);
+  start({ rollbar }).catch(err => {
+    console.error('Error starting server');
+    console.error(err);
+    rollbar.error(err, () => {
+      process.exit(1);
+    });
   });
-});
+} catch (e) {
+  console.error(e);
+  process.exit(-1);
+}

@@ -1,25 +1,20 @@
 {
   "presets": [
-    [
-      "next/babel",
-      {
-        "preset-env": {
-          "modules": "commonjs"
-        },
-        "class-properties": {
-          "loose": true
-        }
-      }
-    ]
+    "next/babel",
+    "@cityofboston/config-babel/typescript"
   ],
-  "plugins": [
-    "@babel/plugin-transform-flow-strip-types",
-    [
-      "inline-import",
-      {
-        "extensions": [".graphql", ".env", ".html", ".mjml", ".txt", ".hbs"]
-      }
-    ],
-    ["@babel/plugin-proposal-decorators", { "legacy": true }]
-  ]
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "next/babel",
+          {
+            "preset-env": {
+              "modules": "commonjs"
+            }
+          }
+        ]
+      ]
+    }
+  }
 }

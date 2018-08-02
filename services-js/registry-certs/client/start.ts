@@ -10,7 +10,7 @@
 // CSS-in-JS libraries before the "css" method is called during component module
 // execution.
 
-import { initBrowser } from './app.js';
+import { initBrowser } from './app';
 
 if ((process as any).browser) {
   initBrowser();

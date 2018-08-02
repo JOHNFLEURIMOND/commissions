@@ -1,13 +1,12 @@
 import fs from 'fs';
-import path from 'path';
 
 const RECEIPT_MJML_TEMPLATE = fs.readFileSync(
-  path.resolve(__dirname, 'receipt.mjml.hbs'),
+  'server/email/receipt.mjml.hbs',
   'utf-8'
 );
 
 const RECEIPT_TEXT_TEMPLATE = fs.readFileSync(
-  path.resolve(__dirname, 'receipt.txt.hbs'),
+  'server/email/receipt.txt.hbs',
   'utf-8'
 );
 
